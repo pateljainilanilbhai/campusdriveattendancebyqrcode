@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<title>Cross-Browser QRCode generator for Javascript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="refresh" content="1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="qrcode.js"></script>
+</head>
+<body>
+<input id="text" type="text" value="" style="width:80%;visibility: hidden;"/><br />
+
+<div style="float:right;">
+<p style="margin-right: 100px; font-size: 30px;">QR code will refresh in <span style="font-size:40px;" id="second"></span> Seconds.</p>
+</div>
+<div id="met"></div>
+
+<div id="qrcode" style="width:100px; height:100px; margin-left: 90px; margin-top:15px;"></div>
+
+
+<script type="text/javascript">
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+	width : 600,
+	height : 600
+});
+
+
+var dt = new Date();
+document.getElementById("second").innerHTML = (10-(dt.getSeconds()%10));
+
+
+
+function refreshData()
+{
+    x = 1;  
+	var elText = document.getElementById("text");
+	elText.value = dt.toLocaleString('en-US',{hour12:false});
+	elText.value = elText.value.replace(/ /g,''); 
+	
+	someVarName = localStorage.getItem("qr");
+	//document.getElementById("met").innerHTML = dt	.getDate(); + " " + dt.getSeconds();
+	
+	if(dt.getSeconds()%10==0)
+	{
+		var str = elText.value;
+		localStorage.setItem("qr", str);
+		
+	}
+	
+	qrcode.makeCode(someVarName);
+    // Do your thing here
+
+    setTimeout(refreshData, x*1000);
+}
+
+
+refreshData(); // execute function
+
+	
+</script>
+</body>
